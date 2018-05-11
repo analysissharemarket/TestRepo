@@ -213,16 +213,16 @@ with open('/tmp/transaction.csv', 'r') as f:
         #print valueF
         #break;
 
-with open('csvFolder/out.csv', 'w') as fout:
+with open('/tmp/out.csv', 'w') as fout:
     writer = csv.writer(fout)
     for key, value in mapOfSymbolAndDate.items():
         stringToappend=key+","+value
         writer.writerow([u''.join(stringToappend).encode('utf8').strip()])
 
-comand="sh removingUnwantedPadding.sh csvFolder/out.csv"
+comand="sh removingUnwantedPadding.sh /tmp/out.csv"
 os.system(comand)
 
-with open('csvFolder/out.csv', 'r') as f,open('csvFolder/tempFinal.csv', 'w') as fout:
+with open('/tmp/out.csv', 'r') as f,open('/tmp/tempFinal.csv', 'w') as fout:
     reader = csv.reader(f)
     writer = csv.writer(fout)
     lineNum = 0
@@ -240,10 +240,10 @@ with open('csvFolder/out.csv', 'r') as f,open('csvFolder/tempFinal.csv', 'w') as
             writer.writerow([u''.join(header).encode('utf8').strip()])
             lineNum = 1;
         writer.writerow([u''.join(tempStr).encode('utf8').strip()])   
-comand="sh removingUnwantedPadding.sh csvFolder/tempFinal.csv"
+comand="sh removingUnwantedPadding.sh /tmp/tempFinal.csv"
 os.system(comand)
 
-with open('csvFolder/tempFinal.csv', 'r') as f,open('csvFolder/Final.csv', 'w') as fout:
+with open('/tmp/tempFinal.csv', 'r') as f,open('/tmp/Final.csv', 'w') as fout:
     reader = csv.reader(f)
     writer = csv.writer(fout)
     tempInt = 0
@@ -275,7 +275,7 @@ with open('csvFolder/tempFinal.csv', 'r') as f,open('csvFolder/Final.csv', 'w') 
         writer.writerow([u''.join(stringToappend).encode('utf8').strip()])
         tempInt = tempInt + 1
         
-comand="sh removingUnwantedPadding.sh csvFolder/Final.csv"
+comand="sh removingUnwantedPadding.sh /tmp/Final.csv"
 os.system(comand)
 ##########################################################################
 #                                                                        #
@@ -293,7 +293,7 @@ outer['Subject'] = 'File ' + 'Final.csv'
 outer['To'] = COMMASPACE.join(recipients)
 outer['From'] = sender
 outer.preamble = 'You will not see this in a MIME-aware mail reader.\n'
-fileattachment='csvFolder/Final.csv'
+fileattachment='/tmp/Final.csv'
 # List of attachments
 attachments = [fileattachment]
 # Add the attachments to the message
@@ -326,9 +326,9 @@ except:
     print("Unable to send the email. Error: ")
     raise
     print("Unable to send the email. Error: ")
-os.remove("csvFolder/Final.csv")
-os.remove("csvFolder/out.csv")
-os.remove("csvFolder/tempFinal.csv")
+os.remove("/tmp/Final.csv")
+os.remove("/tmp/out.csv")
+os.remove("/tmp/tempFinal.csv")
 os.remove(bhav_copy_folder_name+"bhav.csv.zip")
 rmtree(bhav_copy_folder_name)
 #SELECT * FROM `transaction` order by symbol , timestamp DESC
