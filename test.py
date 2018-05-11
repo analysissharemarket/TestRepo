@@ -54,7 +54,7 @@ if holiday == True :
 #
 #############################################################################
 now = datetime.datetime.now()
-delivery_percent_bhav_copy_name = "DELV_PER_FULL_BHAV_COPY";
+delivery_percent_bhav_copy_name = "DELV_PER_FULL_BHAV_COPY_";
 if  now.day < 10 : 
                 delivery_percent_bhav_copy_name = delivery_percent_bhav_copy_name +"0" 
 delivery_percent_bhav_copy_name=delivery_percent_bhav_copy_name +"_"+str(now.day)+now.strftime("%b").upper() + str(now.year) + ".csv"
@@ -251,6 +251,7 @@ with open('csvFolder/tempFinal.csv', 'r') as f,open('csvFolder/Final.csv', 'w') 
         myOtherString = ','.join(str(elm) for elm in row)
         #print myOtherString
         stringToappend=myOtherString+','
+        sumofVal = 0
         if tempInt > 0:
             counter = len(row)-2
             curVal = row[counter]
@@ -261,29 +262,31 @@ with open('csvFolder/tempFinal.csv', 'r') as f,open('csvFolder/Final.csv', 'w') 
                     prevVal = float(prevVal)
                     diffVal = round(((curVal - prevVal)*100)/prevVal,3)
                     stringToappend=stringToappend+str(diffVal)+','
-                    #print diffVal
+                    if (diffVal >= 0):
+                        sumofVal = sumofVal + 1
+                    else :
+                        sumofVal = sumofVal - 1
                 else:
                     stringToappend=stringToappend+','
                 counter = counter - 1
                 curVal = row[counter]
                 prevVal = row[counter - 1]
+        stringToappend=stringToappend+','+str(sumofVal)
         writer.writerow([u''.join(stringToappend).encode('utf8').strip()])
         tempInt = tempInt + 1
         
 comand="sh removingUnwantedPadding.sh csvFolder/Final.csv"
 os.system(comand)
-
 ##########################################################################
 #                                                                        #
 # Below Code Sending Attachment                                          #
 #                                                                        #
 ##########################################################################
 COMMASPACE = ', '
-#sender = ['EMAIL ADDRESSES OF SENDER']
-sender = ''
+sender = 'analysis.sharemarket@gmail.com'
 gmail_password = ''
 #recipients = ['EMAIL ADDRESSES HERE SEPARATED BY COMMAS']
-recipients = ['']
+recipients = ['er.amit8696@gmail.com','nsnitinsinglaca@gmail.com','dhimannitish88@gmail.com']
 # Create the enclosing (outer) message
 outer = MIMEMultipart()
 outer['Subject'] = 'File ' + 'Final.csv'
